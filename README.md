@@ -89,4 +89,3 @@ Där er <u>ingen krav</u> på verken Async eller fluent api, det viktigaste är 
 Gör en dagbok (journal / log) varje dag, också om ni gör något själv på en kväll, så att ni har koll på processen, och kan dokumentera den. Förslag gör det som markdown-dokument i *Dokumentation*-mappen.
 
 Pro-tips: Project i GitHub
-test

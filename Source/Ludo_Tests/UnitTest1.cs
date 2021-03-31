@@ -1,4 +1,3 @@
-using System;
 using Xunit;
 
 namespace Ludo_Tests
@@ -8,7 +7,6 @@ namespace Ludo_Tests
         [Fact]
         public void Test1()
         {
-
         }
     }
 }

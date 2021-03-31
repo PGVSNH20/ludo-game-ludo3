@@ -1,13 +1,13 @@
 ﻿using LudoGame;
 using System;
-using System.Collections.Generic;
 
 namespace Ludo_Game_Console
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            //testscenario, bara ett drag var
             Game.StartGame();
         }
     }
@@ -21,13 +21,23 @@ namespace Ludo_Game_Console
     // ruta sparar vem som står där
     // om en till kliver på ruta kastar ruta ut den första
 
-    class Game
+    internal class Game
     {
         public static void StartGame()
         {
+            //skapar rutor
             Board.MakeSquares();
-            StartLudo.MakePlayers();
-            StartLudo.ChooseColor();
+            //spelare skapas och de väljer färg
+            var Players = Board.MakePlayers();
+            //varje spelare väljer en pjäs (?) och gör ett drag var
+            for (var i = 0; i < Players.Count; i++)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Player {i + 1} ({Players[i].Color}), select a piece: ");
+                Piece currentPiece = Players[i].SelectPiece();
+                int diceroll = Dice.RollDice();
+                Board.MoveTo(diceroll, currentPiece);
+            }
         }
     }
 }

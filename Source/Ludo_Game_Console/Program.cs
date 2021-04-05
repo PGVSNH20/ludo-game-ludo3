@@ -1,5 +1,7 @@
 ﻿using LudoGame;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ludo_Game_Console
 {
@@ -21,23 +23,67 @@ namespace Ludo_Game_Console
     // ruta sparar vem som står där
     // om en till kliver på ruta kastar ruta ut den första
 
-    internal class Game
+    public class Game
     {
         public static void StartGame()
         {
+            Board game = new();
             //skapar rutor
-            Board.MakeSquares();
-            //spelare skapas och de väljer färg
-            var Players = Board.MakePlayers();
-            //varje spelare väljer en pjäs (?) och gör ett drag var
-            for (var i = 0; i < Players.Count; i++)
+            game.MakeSquares();
+
+            //Hur många spelare?
+            Console.WriteLine("How many players? ( 2 - 4 )");
+            int numberOfPlayers = 0;
+            while (numberOfPlayers != 2 && numberOfPlayers != 3 && numberOfPlayers != 4)
             {
-                Console.WriteLine();
-                Console.WriteLine($"Player {i + 1} ({Players[i].Color}), select a piece: ");
-                Piece currentPiece = Players[i].SelectPiece();
-                int diceroll = Dice.RollDice();
-                Board.MoveTo(diceroll, currentPiece);
+                numberOfPlayers = Int32.Parse(Console.ReadLine());
             }
+            //spelare skapas och de väljer färg
+            game.MakePlayers(numberOfPlayers);
+
+            //spelare gör ett drag var tills nån har vunnit
+            GameLoop(game);
+        }
+
+        public static void GameLoop(Board game)
+        {
+            while (!CheckForWinCondition(game.SquareList))
+            {
+                OneMoveEach(game);
+            }
+        }
+
+        public static void OneMoveEach(Board game)
+        {
+            for (var i = 0; i < game.Players.Count; i++)
+            {
+                var currentPlayer = game.Players[i];
+
+                Console.WriteLine($"Player {(i + 1)} ({currentPlayer.Color}), select a piece: ");
+
+                //väljer en pjäs (?)
+                var piece = currentPlayer.SelectPiece();
+
+                //rullar tärning
+                int diceroll = Dice.RollDice();
+
+                //flyttar pjäs
+                game.MoveTo(diceroll, piece);
+            }
+        }
+
+        //om en pjäs står på sista rutan vinner den färgen
+        public static bool CheckForWinCondition(List<Square> squares)
+        {
+            var board = squares.AsQueryable();
+            var winSquare = board.First(square => square.SquareNr == 40);
+            if (winSquare.Piece != null)
+            {
+                var winner = winSquare.Piece.Color;
+                Console.WriteLine($"{winner} is the winner!!");
+                return true;
+            }
+            return false;
         }
     }
 }

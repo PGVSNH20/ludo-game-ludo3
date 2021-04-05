@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LudoGame
 {
@@ -14,16 +12,20 @@ namespace LudoGame
             SquareNr = Id;
         }
 
-        internal void Move(Piece piece)
+        public void Move(Piece piece)
         {
             //en pjäs landar på rutan
-            if (Piece == null) Piece = piece;
+            if (Piece == null)
+            {
+                Piece = piece;
+                Piece.CurrentSquare = this;
+            }
             else
             {
                 //kanske finns bättre sätt att 'döda' den?
-                Piece.isAlive = false;
+                Piece.isAlive = false; 
+                Console.WriteLine($"{Piece.Color} has lost a piece, {piece.Color} has taken its place");
                 Piece = piece;
-                Console.WriteLine($"{Piece} is dead, {piece} has taken its place");
             }
         }
     }

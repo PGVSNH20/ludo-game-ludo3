@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-
-namespace LudoGame
+﻿namespace LudoGame
 {
     public class Piece
     {
-        public bool isAlive;
-        public Square CurrentSquare;
-        public string Color;
+        public bool isAlive { get; set; }
+        public Square CurrentSquare { get; set; }
+        public string Color { get; set; }
 
         public Piece(bool isalive, Square currentsquare, string color)
         {

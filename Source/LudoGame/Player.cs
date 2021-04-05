@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LudoGame
 {
@@ -30,16 +29,25 @@ namespace LudoGame
         //Vilken pjäs flyttas? ska man välja det själv?
         public Piece SelectPiece()
         {
-            //allt följande måste ändras
-            int piecenr = 0;
             Console.WriteLine("1 | 2 | 3 | 4");
-            //returnerar bara om en pjäs valts och den lever
-            while (piecenr != 1 && piecenr != 2 && piecenr != 3 && piecenr != 4 && Pieces[piecenr].isAlive == true)
+            int piecenr = 0;
+            while (piecenr != 1 && piecenr != 2 && piecenr != 3 && piecenr != 4)
             {
                 piecenr = Int32.Parse(Console.ReadLine());
             }
-            return Pieces[piecenr - 1];
 
+            Piece piece = Pieces[piecenr - 1];
+            if (piece.isAlive == true)
+            {
+                return piece;
+
+            }
+            else
+            {
+                Console.WriteLine($"The selected piece is dead, you have {Pieces.Count} pieces left");
+                SelectPiece();
+            }
+            return piece;
 
 
         //    public Color Color { get; }

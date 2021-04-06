@@ -1,6 +1,4 @@
-﻿using FluentAssertions;
-using LudoGame;
-using System.Collections.Generic;
+﻿using LudoGame;
 using Xunit;
 
 namespace Ludo_Tests
@@ -8,27 +6,10 @@ namespace Ludo_Tests
     public class PlayerTests
     {
         [Fact]
-        public void PlayerIsCreated()
+        public void NumberOfPlayersCorrect()
         {
-            var square = new Square(1);
-            Player actual = new("green", square);
-            actual.Should().BeOfType<Player>();
-            actual.StartSquare.Should().BeEquivalentTo(square);
-            actual.Color.Should().BeEquivalentTo("green");
-        }
-
-        [Fact]
-        public void PlayerCanOnlySelectUniqueColor()
-        {
-            var square = new Square(1);
-
-            List<string> actualColors = new();
-
-            actualColors.Add(Board.ChooseColor("Green"));
-            actualColors.Add(Board.ChooseColor("Green"));
-            actualColors.Add(Board.ChooseColor("Blue"));
-
-            actualColors.Should().OnlyHaveUniqueItems();
+            Game.SelectNumberOfPlayers("2");
+            Assert.Equal(2, Game.NumberOfPlayers);
         }
     }
 }

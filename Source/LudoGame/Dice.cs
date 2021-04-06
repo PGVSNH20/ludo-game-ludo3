@@ -18,8 +18,8 @@ namespace LudoGame
         public static int DiceRoll()
         {
             Random rand = new();
-            int diceroll = rand.Next(0, 6);
-            Console.WriteLine("You rolled a {0}", diceroll);
+            int diceroll = rand.Next(1, 6);
+            Console.WriteLine($"You rolled a {diceroll}");
             return diceroll;
         }
     }

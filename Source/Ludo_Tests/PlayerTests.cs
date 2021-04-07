@@ -1,4 +1,5 @@
 ﻿using LudoGame;
+using System.Linq;
 using Xunit;
 
 namespace Ludo_Tests
@@ -8,8 +9,19 @@ namespace Ludo_Tests
         [Fact]
         public void NumberOfPlayersCorrect()
         {
-            Game.SelectNumberOfPlayers("2");
-            Assert.Equal(2, Game.NumberOfPlayers);
+            Assert.Equal(2, Game.Players.Count);
+        }
+
+        [Fact]
+        public void ColorIsCorrect()
+        {
+            //skapa två spelare
+            Game.SelectNumberOfPlayers(2);
+            //rätt antal spelare
+            Assert.Equal(2, Game.Players.Count);
+            //rätt färg
+            var player = Game.Players[0];
+            Assert.Equal("red", player.Color);
         }
     }
 }

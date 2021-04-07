@@ -3,54 +3,40 @@ using System.Collections.Generic;
 
 namespace LudoGame
 {
-    public class Player
+    public interface IPlayer
     {
-        public string Color { get; set; }
-        public string Name { get; }
+        string Color { get; }
+        List<Piece> Pieces { get; }
+    }
+
+    public class BluePlayer : IPlayer
+    {
+        public string Color { get; set; } = "blue";
         public Square StartSquare;
         public Square WinSquare;
-        
-        //varje spelare:
-        //todo: väljer färg
-        //todo: välja namn
-
-        //todo: spelbrädet skapas (square)
-        //todo: pjäser skapas
-
-        //todo: spelare slår tärning
-        //todo: spelare väljer pjäs, inte på första draget
+        public List<Piece> Pieces { get; set; } = new();
     }
 
-
-    public class BluePlayer
+    public class RedPlayer : IPlayer
     {
-        public string color = "blue";
-        public Square startSquare;
-        public Square endSquare;
-        public List<Piece> Pieces = new();
+        public string Color { get;  set; } = "red";
+        public Square StartSquare;
+        public Square WinSquare;
+        public List<Piece> Pieces { get; set; } = new();
+    }
+    public class YellowPlayer : IPlayer
+    {
+        public string Color { get; set; } = "yellow";
+        public Square StartSquare;
+        public Square WinSquare;
+        public List<Piece> Pieces { get; set; } = new();
     }
 
-    public class RedPlayer
+    public class GreenPlayer : IPlayer
     {
-
-        public string color = "red";
-        public Square startSquare;
-        public Square endSquare;
-        public List<Piece> Pieces = new();
-    }
-    public class YellowPlayer
-    {
-        public string color = "blue";
-        public Square startSquare;
-        public Square endSquare;
-        public List<Piece> Pieces = new();
-    }
-
-    public class GreenPlayer
-    {
-        public string color = "blue";
-        public Square startSquare;
-        public Square endSquare;
-        public List<Piece> Pieces = new();
+        public string Color { get; set; } = "green";
+        public Square StartSquare;
+        public Square WinSquare;
+        public List<Piece> Pieces { get; set; } = new();
     }
 }

@@ -7,7 +7,7 @@ namespace LudoGame
     public class Board
     {
         public string Nest { get; set; }
-        public static List<Square> Squares { get; set; } = new();
+        public List<Square> Squares { get; set; } = new();
 
         public Board()
         {

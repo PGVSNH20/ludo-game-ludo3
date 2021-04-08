@@ -9,12 +9,14 @@ namespace Ludo_Tests
         [Fact]
         public void NumberOfPlayersCorrect()
         {
+            var Game = new Game();
             Assert.Equal(2, Game.Players.Count);
         }
 
         [Fact]
         public void ColorIsCorrect()
         {
+            var Game = new Game();
             //skapa två spelare
             Game.SelectNumberOfPlayers(2);
             //rätt antal spelare

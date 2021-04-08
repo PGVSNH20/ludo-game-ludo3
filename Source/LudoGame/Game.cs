@@ -19,14 +19,16 @@ namespace LudoGame
 
     public class Game
     {
-        public static List<IPlayer> Players { get; set; } = new();
+        public List<IPlayer> Players { get; set; } = new();
+        public Board Board { get; set; }
 
-        public static void SelectNumberOfPlayers(int input) 
+        public void SelectNumberOfPlayers(int input) 
         {
-            if (Board.Squares[1] == null)
+            if (Board == null)
             {
-                Board board = new Board();
+                Board = new Board();
             }
+
             List<IPlayer> AvailablePlayers = new();
 
             AvailablePlayers.Add(new RedPlayer());
@@ -43,7 +45,7 @@ namespace LudoGame
                 Players.Add(player);
             }
         }
-        public static void MakePieces(IPlayer player, Square square)
+        public void MakePieces(IPlayer player, Square square)
         {
             for (int i = 0; i < 4; i++)
             {

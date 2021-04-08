@@ -12,7 +12,12 @@ namespace Ludo_Game_Console
             Console.WriteLine("Select number of players:");
             string input = Console.ReadLine();
             int numberOfPlayers = Int32.Parse(input);
+            var Game = new Game();
             Game.SelectNumberOfPlayers(numberOfPlayers);
+
+            Console.WriteLine("Start Game!");
+            
+
 
             //for (int i = 0; i < numberOfPlayers; i++)
             //{

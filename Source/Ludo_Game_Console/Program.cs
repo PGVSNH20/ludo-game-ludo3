@@ -10,8 +10,7 @@ namespace Ludo_Game_Console
         private static void Main(string[] args)
         {
             EventLoop gamePlay = new EventLoop();
-            gamePlay.RunGame();
+            gamePlay.GameLoop();
         }
-
     }
 }

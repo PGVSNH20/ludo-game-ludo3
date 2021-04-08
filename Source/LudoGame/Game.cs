@@ -18,17 +18,38 @@ namespace LudoGame
     //todo: spelare väljer pjäs, inte på första draget
     //todo: vinst streckan 
     //todo: databas
+    //todo: kliva över 40 går runt, tillbak på 0
+    //todo
     public class EventLoop
     {
         public void GameLoop()
         {
-            while (CheckForWin())
+            Game game = CreateGame();
+            while (true)
             {
-                RunGame();
+                RunGameMove(game);
             }
         }
 
-        public void RunGame()
+        public void RunGameMove(Game game)
+        {
+            foreach (IPlayer player in game.Players)
+            {
+
+                //rulla tärning
+                int diceroll = Dice.RollDice(player);
+                //välja pjäs
+                Piece piece = game.SelectPiece(player);
+                //spara gamla rutan för att skriva drag
+                Square oldsquare = piece.CurrentSquare;
+                //flytta pjäs
+                game.CheckIfAliveAndMove(piece, diceroll);
+                //skriv ut vad som hände
+                Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
+            }
+        }
+
+        public Game CreateGame()
         {
             Game game = new();
 
@@ -46,25 +67,13 @@ namespace LudoGame
             game.SetUpBoard(number);
 
             //varje spelare gör ett drag
-            foreach (IPlayer player in game.Players)
-            {
+            return game;
 
-                //rulla tärning
-                int diceroll = Dice.RollDice(player);
-                //välja pjäs
-                Piece piece = game.SelectPiece(player);
-                //spara gamla rutan för att skriva drag
-                Square oldsquare = piece.CurrentSquare;
-                //flytta pjäs
-                game.CheckIfAliveAndMove(piece, diceroll);
-                //skriv ut vad som hände
-                Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
-            }
         }
 
         public bool CheckForWin()
         {
-            return false;
+            return true;
         }
     }
 

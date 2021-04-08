@@ -19,7 +19,7 @@ namespace LudoGame
     //todo: vinst streckan 
     //todo: databas
     //todo: kliva över 40 går runt, tillbak på 0
-    //todo
+    //todo: om man inte rullar 1, 6 och alla pjäser är döda så får man inte välja en pjäs .. 
     public class EventLoop
     {
         public void GameLoop()

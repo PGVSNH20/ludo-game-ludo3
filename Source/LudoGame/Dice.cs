@@ -5,9 +5,9 @@ namespace LudoGame
     public class Dice
     {
         //rulla tärning på enter
-        public static int RollDice()
+        public static int RollDice(IPlayer player)
         {
-            Console.WriteLine("Press enter to roll the dice");
+            Console.WriteLine($"It's {player.Color}'s turn. Press enter to roll the dice");
             while (Console.ReadKey().Key != ConsoleKey.Enter)
             {
             }

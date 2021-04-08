@@ -5,15 +5,13 @@ namespace Ludo_Tests
 {
     public class PieceTests
     {
-        Square square = new();
-        Board board = new();
 
         [Fact]
         public void PiecesAreCreated()
         {
             var Game = new Game();
             RedPlayer redplayer = new();
-            Game.MakePieces(redplayer, square);
+            Game.MakePieces(redplayer);
             Assert.Equal(typeof(Piece), redplayer.Pieces[0].GetType());
         }
 
@@ -22,7 +20,7 @@ namespace Ludo_Tests
         {
             var Game = new Game();
             RedPlayer redplayer = new();
-            Game.MakePieces(redplayer, square);
+            Game.MakePieces(redplayer);
             var pieces = redplayer.Pieces;
 
             Assert.Equal(4, pieces.Count);
@@ -33,7 +31,7 @@ namespace Ludo_Tests
         {
             var Game = new Game();
             RedPlayer redplayer = new();
-            Game.MakePieces(redplayer, square);
+            Game.MakePieces(redplayer);
             var pieces = redplayer.Pieces;
 
             Assert.Equal("red", pieces[0].Color);

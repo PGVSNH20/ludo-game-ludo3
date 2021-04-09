@@ -23,13 +23,13 @@ As a *nest*, I want to *store the players pieces* so that *the pieces doesn't st
 
 As a *nest*, I want to *bring home the piece if it's knocked out* so that *the piece has somewhere to move*.
 
-##Board
+## Board
 As a *board*, I want to *create the squares* so that *the pieces can move*.
 
-##Square
+## Square
 As a *square*, I want to *keep track of the pieces* so that *I know which square it's currently placed on*.
 
 As a *square*, I want to *see if two pieces are at the same square* so that *one piece can be pushed back to the nest*.
 
-##Win square
+## Win square
 As a *Win square*, I want to *count number of pieces on me* so that *I can check if a player has won*.

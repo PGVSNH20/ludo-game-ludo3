@@ -29,38 +29,31 @@ namespace Ludo_Tests
         {
             Game game = new();
             game.SetUpBoard(2);
-            var square = game.Board.Squares.Single(square => square.SquareId == 10);
 
-            Piece piece = new()
-            {
-                isAlive = false,
-                Color = "red",
-                CurrentSquare = square
-            };
+            IPlayer player = game.Players[0];
 
-            game.CheckIfAliveAndMove(piece, 1);
-            Assert.Equal(11, piece.CurrentSquare.SquareId);
+            game.MakePieces(player);
+
+            Piece piece = game.SelectPiece(player, 1);
+
+            game.MoveToSquare(piece, 1);
+
+            Assert.Equal(1, player.Pieces[0].CurrentSquare.SquareId);
         }
 
         [Fact]
         public void NotAbleToMoveFromNestRoll2()
         {
             Game game = new();
+            game.SetUpBoard(2);
 
-            Square square = new()
-            {
-                SquareId = 10
-            };
+            IPlayer player = game.Players[0];
 
-            Piece piece = new()
-            {
-                isAlive = false,
-                Color = "red",
-                CurrentSquare = square
-            };
+            game.MakePieces(player);
 
-            game.CheckIfAliveAndMove(piece, 2);
-            Assert.Equal(10, piece.CurrentSquare.SquareId);
+            Piece piece = game.SelectPiece(player, 2);
+
+            Assert.Equal(null, piece);
         }
 
         //[Fact]

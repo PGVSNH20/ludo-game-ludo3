@@ -52,5 +52,29 @@ namespace Ludo_Tests
 
             Assert.True(playerWinSquare != null);
         }
+
+        //om du inte kastar 1 eller 6 och bara en lever, flytta direkt
+        [Fact]
+        public void FirstRollIsAutomatic()
+        {
+            Game game = new Game();
+            game.SetUpBoard(2);
+            IPlayer player = game.Players[0];
+            Piece piece = game.SelectPiece(player, 6);
+
+            Assert.Equal(typeof(Piece), piece.GetType());
+        }
+
+        //om du INTE kastar 1, 6 och alla pjäser är döda, flytta inte
+        [Fact]
+        public void IfAllPiecesAreDeadAndRoll4Dontmove()
+        {
+            Game game = new Game();
+            game.SetUpBoard(2);
+            IPlayer player = game.Players[0];
+            Piece piece = game.SelectPiece(player, 4);
+
+            Assert.Equal(null, piece);
+        }
     }
 }

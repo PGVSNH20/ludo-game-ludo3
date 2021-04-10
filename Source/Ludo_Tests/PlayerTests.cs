@@ -10,7 +10,7 @@ namespace Ludo_Tests
         public void NumberOfPlayersCorrect()
         {
             var Game = new Game();
-            Game.SetUpBoard(2);
+            Game.SetUpBoard(2, false);
             Assert.Equal(2, Game.Players.Count);
         }
 
@@ -19,7 +19,7 @@ namespace Ludo_Tests
         {
             var Game = new Game();
             //skapa två spelare
-            Game.SetUpBoard(2);
+            Game.SetUpBoard(2, false);
             //rätt antal spelare
             Assert.Equal(2, Game.Players.Count);
             //rätt färg

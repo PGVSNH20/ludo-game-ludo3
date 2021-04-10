@@ -8,6 +8,7 @@ namespace LudoGame
         public static int RollDice(IPlayer player)
         {
             Console.WriteLine($"It's {player.Color}'s turn. Press enter to roll the dice");
+            
             while (Console.ReadKey().Key != ConsoleKey.Enter)
             {
             }

@@ -9,7 +9,7 @@ namespace Ludo_Tests
         public void CanMovePiece()
         {
             Game game = new();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
             var square = game.Board.Squares.Single(square => square.SquareId == 10);
 
             Piece piece = new()
@@ -28,7 +28,7 @@ namespace Ludo_Tests
         public void CanMoveFromNestRoll1()
         {
             Game game = new();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
 
             IPlayer player = game.Players[0];
 
@@ -45,7 +45,7 @@ namespace Ludo_Tests
         public void NotAbleToMoveFromNestRoll2()
         {
             Game game = new();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
 
             IPlayer player = game.Players[0];
 
@@ -53,7 +53,7 @@ namespace Ludo_Tests
 
             Piece piece = game.SelectPiece(player, 2);
 
-            Assert.Equal(null, piece);
+            Assert.Null(piece);
         }
 
         //[Fact]

@@ -32,7 +32,7 @@ namespace Ludo_Tests
         public void NestIsCreated()
         {
             Game Game = new Game();
-            Game.SetUpBoard(3);
+            Game.SetUpBoard(3, false);
             int playersStartSquare = Game.Players[0].Pieces[0].CurrentSquare.SquareId;
             int playersStartSquare2 = Game.Players[1].Pieces[0].CurrentSquare.SquareId;
             int playersStartSquare3 = Game.Players[2].Pieces[0].CurrentSquare.SquareId;
@@ -46,7 +46,7 @@ namespace Ludo_Tests
         public void WinSquaresAreCreated()
         {
             Game game = new();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
 
             int? playerWinSquare = game.Players[0].WinSquare.SquareId;
 
@@ -58,7 +58,7 @@ namespace Ludo_Tests
         public void FirstRollIsAutomatic()
         {
             Game game = new Game();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
             IPlayer player = game.Players[0];
             Piece piece = game.SelectPiece(player, 6);
 
@@ -70,11 +70,11 @@ namespace Ludo_Tests
         public void IfAllPiecesAreDeadAndRoll4Dontmove()
         {
             Game game = new Game();
-            game.SetUpBoard(2);
+            game.SetUpBoard(2, false);
             IPlayer player = game.Players[0];
             Piece piece = game.SelectPiece(player, 4);
 
-            Assert.Equal(null, piece);
+            Assert.Null(piece);
         }
     }
 }

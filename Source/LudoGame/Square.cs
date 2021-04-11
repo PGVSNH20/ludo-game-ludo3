@@ -10,11 +10,11 @@ namespace LudoGame
         {
             //lägg till antal steg
             int steps = this.SquareId - piece.CurrentSquare.SquareId;
-            piece.Steps = steps;
+            piece.Steps += steps;
             //om det står en pjäs av annan färg, knuffa den
             if (SquarePiece != null && SquarePiece.Color != piece.Color)
             {
-                SquarePiece.isAlive = false;
+                SquarePiece.IsAlive = false;
                 //todo: flyta tillbaka pjäs till start om den blir knuffad
                 Console.WriteLine($"{SquarePiece.Color} has lost a piece, {piece.Color} has taken the square");
                 SquarePiece = piece;

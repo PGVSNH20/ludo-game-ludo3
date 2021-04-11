@@ -31,7 +31,7 @@ namespace Ludo_Tests
         [Fact]
         public void NestIsCreatedUnique()
         {
-            Game Game = new Game();
+            Game Game = new();
             Game.SetUpBoard(3, false);
             int playersStartSquare = Game.Players[0].Pieces[0].CurrentSquare.SquareId;
             int playersStartSquare2 = Game.Players[1].Pieces[0].CurrentSquare.SquareId;

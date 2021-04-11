@@ -83,7 +83,7 @@ namespace LudoGame
             {
                 Piece piece = new()
                 {
-                    isAlive = false,
+                    IsAlive = false,
                     Color = player.Color,
                     CurrentSquare = player.StartSquare,
                     PieceId = (i + 1)
@@ -98,9 +98,9 @@ namespace LudoGame
             //tärningskast plus nuvarande ruta
             int newSquareId = (piece.CurrentSquare.SquareId + diceroll);
             //om nästa ruta är över 40, gå runt, ruta 40 blir samma ruta som ruta 0
-            if (newSquareId > 40) newSquareId = newSquareId - 40;
+            if (newSquareId > 40) newSquareId -= 40;
             //hitta rutan med den siffran, eller null om den inte finns
-            Square newSquare = Board.Squares.SingleOrDefault(square => square.SquareId == newSquareId);
+            Square newSquare = Board.Squares[newSquareId];
             //skicka tbx den rutan
             return newSquare;
         }
@@ -112,7 +112,7 @@ namespace LudoGame
             //ta bort pjäsen från nuvarande ruta
             piece.CurrentSquare.SquarePiece = null;
             //gör pjäsen levande om den inte är det
-            if (piece.isAlive == false) piece.isAlive = true;
+            if (piece.IsAlive == false) piece.IsAlive = true;
             //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
             if (piece.Steps < 40)
             {
@@ -134,8 +134,8 @@ namespace LudoGame
             Piece newpiece = pieces[0];
             //om tärningskast är 1,6
             bool diceroll1or6 = diceroll == 1 || diceroll == 6;
-            //om bara en lever
-            bool onlyOneAlive = pieces[0].isAlive && !(pieces[1].isAlive && pieces[2].isAlive && pieces[3].isAlive);
+            //hur många pjäser som lever
+            int numberAlive = pieces.Count(piece => piece.IsAlive == true);
             //om en pjäs är på vinststräckan
             bool pieceOnWinSquares = pieces.Any(piece => piece.CurrentSquare.GetType() == typeof(InnerSquare));
 
@@ -144,7 +144,7 @@ namespace LudoGame
             bool result = (a | b | c) & !(a & b & c);
              */
             //om du inte kastar 1 eller 6 och bara en lever, flytta direkt
-            if (onlyOneAlive)
+            if (numberAlive == 1)
             {
                 if (!diceroll1or6)
                 {
@@ -154,7 +154,7 @@ namespace LudoGame
 
             //om du INTE kastar 1, 6 och alla pjäser är döda, flytta inte
             //om du kastar 1,6 och alla pjäser är döda, flytta direkt
-            if (!pieces.Any(piece => piece.isAlive == true))
+            if (numberAlive == 0)
             {
                 if (!diceroll1or6)
                 {
@@ -191,7 +191,7 @@ namespace LudoGame
             //om du inte kastar 1 eller 6 får du bara flytta levande pjäser
             if (!diceroll1or6)
             {
-                var piecesAreAlive = pieces.Where(pieces => pieces.isAlive);
+                var piecesAreAlive = pieces.Where(pieces => pieces.IsAlive);
                 Console.WriteLine($"Which piece do you want to move?");
                 foreach (Piece piece in piecesAreAlive)
                 {
@@ -267,9 +267,19 @@ namespace LudoGame
             //WinSquare newsquare = squares.SingleOrDefault(square => square.SquareId == diceroll);
             int newSquareId = currentSquare + diceroll;
             // 8
+            int walkback = 0;
+            //om du kliver över vinstrutan
+            if (newSquareId > 5)
+            {
+                //antal steg du klivit över
+                walkback = newSquareId - 5;
+                //nya rutan är det antalet steg tillbaka från vinstrutan
+                newSquareId = 5 - walkback;
+            }
+
+
             if (newSquareId == 5)
             {
-
                 Console.WriteLine("Congratulations you have finnished the game! You are now free from our chains and can leave to live your life!");
                 player.Pieces.Remove(piece);
             } else

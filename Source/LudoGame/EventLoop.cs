@@ -14,11 +14,9 @@ namespace LudoGame
     //spelare väljer pjäs, inte på första draget
     //om man inte rullar 1, 6 och alla pjäser är döda så får man inte välja en pjäs ..
     //automatiskt flytta levande pjäs om endast en lever
-
-    //todo: om en spelare har möjlighet att knuffa ut en annan spelares pjäs vill detta visas.
-    //todo: vinst streckan 
-    //todo: databas
-    //todo: kliva över 40 går runt, tillbak på 0
+    //om en spelare har möjlighet att knuffa ut en annan spelares pjäs vill detta visas.
+    //vinst streckan 
+    //kliva över 40 går runt, tillbak på 0
 
     public class EventLoop
     {
@@ -61,6 +59,9 @@ namespace LudoGame
                         ISquare oldsquare = piece.CurrentSquare;
                         //flytta pjäs
                         game.WinRowMove(piece, diceroll);
+                        //skriv ut vad som hände
+                        Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
+                        Console.WriteLine($"Piece nr {piece.PieceId} is {6 - piece.CurrentSquare.SquareId} steps from winning");
                     }
                 }
                 Console.ReadLine();

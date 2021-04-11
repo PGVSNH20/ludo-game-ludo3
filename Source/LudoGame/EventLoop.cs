@@ -43,9 +43,13 @@ namespace LudoGame
                 //välja pjäs
                 Piece piece = game.SelectPiece(player, diceroll);
 
+
                 if (piece != null)
-                { 
-                    if (piece.CurrentSquare.GetType() == typeof(Square))
+                {
+                    int newsquarenr = piece.Steps + diceroll;
+
+                    //stanna på yttre raden om du rullar mindre än 40
+                    if (newsquarenr < 40)
                     {
                         //spara gamla rutan för att skriva drag
                         ISquare oldsquare = piece.CurrentSquare;
@@ -53,15 +57,25 @@ namespace LudoGame
                         game.MoveToSquare(piece, diceroll);
                         //skriv ut vad som hände
                         Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
-                    } else
+                    } else  //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
+
                     {
-                        //spara gamla rutan för att skriva drag
-                        ISquare oldsquare = piece.CurrentSquare;
-                        //flytta pjäs
-                        game.WinRowMove(piece, diceroll);
-                        //skriv ut vad som hände
-                        Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
-                        Console.WriteLine($"Piece nr {piece.PieceId} is {6 - piece.CurrentSquare.SquareId} steps from winning");
+                        //gå till inre raden
+                        if (player.WinSquares != null)
+                        {
+                            //spara gamla rutan för att skriva drag
+                            ISquare oldsquare = piece.CurrentSquare;
+                            //flytta pjäs
+                            game.WinRowMove(piece, diceroll);
+                            //skriv ut vad som hände
+                            Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
+                            Console.WriteLine($"Piece nr {piece.PieceId} is {5 - piece.CurrentSquare.SquareId} steps from winning");
+                        } else
+                        {
+                            //skapa inre raden om den inte finns
+                            int steps = newsquarenr - 40;
+                            game.SetUpWinSquares(piece, steps);
+                        }
                     }
                 }
                 Console.ReadLine();
@@ -76,7 +90,7 @@ namespace LudoGame
             Console.WriteLine("Select number of players (2 - 4)");
             string input = Console.ReadLine();
             //vägrar acceptera annat än 2,3,4
-            while (input != "2" && input != "3" && input != "4")
+            while (input != "1" && input != "2" && input != "3" && input != "4")
             {
                 input = Console.ReadLine();
             }

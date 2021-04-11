@@ -98,7 +98,7 @@ namespace LudoGame
             //tärningskast plus nuvarande ruta
             int newSquareId = (piece.CurrentSquare.SquareId + diceroll);
             //om nästa ruta är över 40, gå runt, ruta 40 blir samma ruta som ruta 0
-            if (newSquareId > 40) newSquareId -= 40;
+            if (newSquareId >= 40) newSquareId -= 40;
             //hitta rutan med den siffran, eller null om den inte finns
             Square newSquare = Board.Squares[newSquareId];
             //skicka tbx den rutan
@@ -113,17 +113,8 @@ namespace LudoGame
             piece.CurrentSquare.SquarePiece = null;
             //gör pjäsen levande om den inte är det
             if (piece.IsAlive == false) piece.IsAlive = true;
-            //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
-            if (piece.Steps < 40)
-            {
-                //flytta pjäsen till nya rutan
-                newSquare.MoveHere(piece);
-
-            } else
-            {
-                int steps = piece.Steps - 40;
-                SetUpWinSquares(piece, steps);
-            }
+            //flytta pjäsen till nya rutan
+            newSquare.MoveHere(piece);
         }
         //pjäs logik
         public Piece SelectPiece(IPlayer player, int diceroll)
@@ -244,14 +235,19 @@ namespace LudoGame
             Winsquare.SquareId = 5;
             squares.Add(Winsquare);
 
+            InnerSquare square0;
             //hitta rutan du landar på
-            InnerSquare square0 = squares.SingleOrDefault(square => square.SquareId == steps);
+            if (steps == 0) square0 = squares[0];
+            else
+            {
+                square0 = squares.SingleOrDefault(square => square.SquareId == steps);
+            }
             //ta bort från förra rutan
             piece.CurrentSquare.SquarePiece = null;
             //flytta hit pjäsen
             piece.CurrentSquare = square0;
-            piece.Steps = 0;
-
+            square0.SquarePiece = piece;
+            piece.Steps = 40;
             //lägg till inre raden
             player.WinSquares = squares;
         }
@@ -282,11 +278,8 @@ namespace LudoGame
             {
                 Console.WriteLine("Congratulations you have finnished the game! You are now free from our chains and can leave to live your life!");
                 player.Pieces.Remove(piece);
-            } else
-            {
-                int winroll = 5 - currentSquare;
-                Console.WriteLine($"You need to roll a {winroll}, next players turn");
             }
+
             //hitta rutan med id = newsquareid
             ISquare square = squares.SingleOrDefault(square => square.SquareId == newSquareId);
             //ta bort från gamla rutan

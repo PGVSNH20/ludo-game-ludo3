@@ -29,7 +29,7 @@ namespace Ludo_Tests
         }
 
         [Fact]
-        public void NestIsCreated()
+        public void NestIsCreatedUnique()
         {
             Game Game = new Game();
             Game.SetUpBoard(3, false);
@@ -42,39 +42,13 @@ namespace Ludo_Tests
             Assert.Equal(20, playersStartSquare3);
         }
 
-        [Fact]
-        public void WinSquaresAreCreated()
-        {
-            Game game = new();
-            game.SetUpBoard(2, false);
+        //[Fact]
+        //public void WinSquaresAreCreated()
+        //{
+        //    Game game = new();
+        //    game.SetUpBoard(2, false);
 
-            int? playerWinSquare = game.Players[0].WinSquare.SquareId;
-
-            Assert.True(playerWinSquare != null);
-        }
-
-        //om du inte kastar 1 eller 6 och bara en lever, flytta direkt
-        [Fact]
-        public void FirstRollIsAutomatic()
-        {
-            Game game = new Game();
-            game.SetUpBoard(2, false);
-            IPlayer player = game.Players[0];
-            Piece piece = game.SelectPiece(player, 6);
-
-            Assert.Equal(typeof(Piece), piece.GetType());
-        }
-
-        //om du INTE kastar 1, 6 och alla pjäser är döda, flytta inte
-        [Fact]
-        public void IfAllPiecesAreDeadAndRoll4Dontmove()
-        {
-            Game game = new Game();
-            game.SetUpBoard(2, false);
-            IPlayer player = game.Players[0];
-            Piece piece = game.SelectPiece(player, 4);
-
-            Assert.Null(piece);
-        }
+        //    Assert.NotNull(playerWinSquare);
+        //}
     }
 }

@@ -2,14 +2,17 @@
 
 namespace LudoGame
 {
-    public class Square
+    public class Square : ISquare
     {
         public Piece SquarePiece { get; set; }
         public int SquareId { get; set; }
-
         public void MoveHere(Piece piece)
         {
-            if (SquarePiece != null)
+            //lägg till antal steg
+            int steps = this.SquareId - piece.CurrentSquare.SquareId;
+            piece.Steps = steps;
+            //om det står en pjäs av annan färg, knuffa den
+            if (SquarePiece != null && SquarePiece.Color != piece.Color)
             {
                 SquarePiece.isAlive = false;
                 //todo: flyta tillbaka pjäs till start om den blir knuffad

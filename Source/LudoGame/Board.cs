@@ -8,7 +8,6 @@ namespace LudoGame
     {
         public string Nest { get; set; }
         public List<Square> Squares { get; set; }
-
         public Board()
         {
             Squares = new();

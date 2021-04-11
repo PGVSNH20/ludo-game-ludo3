@@ -8,6 +8,7 @@ namespace LudoGame
     {
         public List<IPlayer> Players { get; set; } = new();
         public Board Board { get; set; }
+        public InnerSquare Winsquare { get; set; } = new();
 
         //välj färg själv
         public List<IPlayer> ColorSelect(int nrOfPlayers, List<IPlayer> availablePlayers)
@@ -75,6 +76,7 @@ namespace LudoGame
                 Players = ColorSelect(nrOfPlayers, AvailablePlayers);
             }
         }
+        //skapa pjäser
         public void MakePieces(IPlayer player)
         {
             for (int i = 0; i < 4; i++)
@@ -89,7 +91,8 @@ namespace LudoGame
             player.Pieces.Add(piece);
             }
         }
-
+        //spelare börjar i sitt bo
+        //hitta nästa ruta
         public Square FindNextSquare(Piece piece, int diceroll)
         {
             //tärningskast plus nuvarande ruta
@@ -101,7 +104,7 @@ namespace LudoGame
             //skicka tbx den rutan
             return newSquare;
         }
-
+        //flytta till en ruta
         public void MoveToSquare(Piece piece, int diceroll)
         {
             //hitta rutan med den siffran
@@ -110,10 +113,19 @@ namespace LudoGame
             piece.CurrentSquare.SquarePiece = null;
             //gör pjäsen levande om den inte är det
             if (piece.isAlive == false) piece.isAlive = true;
-            //flytta pjäsen till nya rutan
-            newSquare.MoveHere(piece);
-        }
+            //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
+            if (piece.Steps < 40)
+            {
+                //flytta pjäsen till nya rutan
+                newSquare.MoveHere(piece);
 
+            } else
+            {
+                int steps = piece.Steps - 40;
+                SetUpWinSquares(piece, steps);
+            }
+        }
+        //pjäs logik
         public Piece SelectPiece(IPlayer player, int diceroll)
         {
             //listan av pjäser
@@ -124,6 +136,9 @@ namespace LudoGame
             bool diceroll1or6 = diceroll == 1 || diceroll == 6;
             //om bara en lever
             bool onlyOneAlive = pieces[0].isAlive && !(pieces[1].isAlive && pieces[2].isAlive && pieces[3].isAlive);
+            //om en pjäs är på vinststräckan
+            bool pieceOnWinSquares = pieces.Any(piece => piece.CurrentSquare.GetType() == typeof(InnerSquare));
+
             /*
             check whether at least one of the values is set and not all three values are set:
             bool result = (a | b | c) & !(a & b & c);
@@ -154,13 +169,21 @@ namespace LudoGame
             //om du kastar 1 eller 6 får du flytta vilken du vill
             if (diceroll1or6)
             {
+                Console.WriteLine($"Which piece do you want to move?");
                 foreach (Piece piece in pieces)
                 {
-                    Console.WriteLine($"Which piece do you want to move? {piece.PieceId}, current square: {piece.CurrentSquare.SquareId}");
-                    //kolla om man har möjlighet att knuffa
-                    //todo: kolla om pjäsen som blir knuffad är en annan färg, (kan man stå flera pjäser på samma ruta?)
+                    if (piece.CurrentSquare.GetType() == typeof(Square))
+                    {
+                        Console.WriteLine($"{piece.PieceId}, current square: {piece.CurrentSquare.SquareId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{piece.PieceId}, current square on inner row: {piece.CurrentSquare.SquareId}");
+                    }
                     Square square = FindNextSquare(piece, diceroll);
-                    if (square.SquarePiece != null) Console.WriteLine($"Move piece {piece.PieceId} to knuff {square.SquarePiece.Color}'s piece");
+                    //kolla om pjäsen som blir knuffad är en annan färg, (kan man stå flera pjäser på samma ruta?)
+                    //kolla om man har möjlighet att knuffa
+                    if (square.SquarePiece != null && square.SquarePiece.Color != piece.Color) Console.WriteLine($"Move piece {piece.PieceId} to knuff {square.SquarePiece.Color}'s piece");
                 }
                 newpiece = SelectPieceUserInput(pieces);
             }
@@ -169,9 +192,16 @@ namespace LudoGame
             if (!diceroll1or6)
             {
                 var piecesAreAlive = pieces.Where(pieces => pieces.isAlive);
+                Console.WriteLine($"Which piece do you want to move?");
                 foreach (Piece piece in piecesAreAlive)
                 {
-                    Console.WriteLine($"Which piece do you want to move? {piece.PieceId}, current square: {piece.CurrentSquare.SquareId}");
+                    if (piece.CurrentSquare.GetType() == typeof(Square))
+                    {
+                        Console.WriteLine($"{piece.PieceId}, current square: {piece.CurrentSquare.SquareId}");
+                    } else
+                    {
+                        Console.WriteLine($"{piece.PieceId}, current square on inner row: {piece.CurrentSquare.SquareId}");
+                    }
                 }
                 newpiece = SelectPieceUserInput(piecesAreAlive.ToList());
             }
@@ -179,7 +209,7 @@ namespace LudoGame
             //ska returnera en pjäs
             return newpiece;
         }
-
+        //spelare väljer pjäs
         public Piece SelectPieceUserInput(List<Piece> pieces)
         {
             //todo: felhantera user input om t.ex enter
@@ -196,6 +226,63 @@ namespace LudoGame
             //Om pjäsen finns, skicka tillbaka den
             var selectedpiece = pieces.SingleOrDefault(piece => piece.PieceId == input);
             return selectedpiece;
+        }
+        //skapa vinststräcka
+        public void SetUpWinSquares(Piece piece, int steps)
+        {
+            //hitta spelaren
+            var player = Players.SingleOrDefault(player => player.Color == piece.Color);
+            List<InnerSquare> squares = new();
+            // 4 rutor skapas (1 - 5) 
+            for (int i = 1; i < 5; i++)
+            {
+                InnerSquare square = new();
+                square.SquareId = i;
+                squares.Add(square);
+            }
+            //vinstruta
+            Winsquare.SquareId = 5;
+            squares.Add(Winsquare);
+
+            //hitta rutan du landar på
+            InnerSquare square0 = squares.SingleOrDefault(square => square.SquareId == steps);
+            //ta bort från förra rutan
+            piece.CurrentSquare.SquarePiece = null;
+            //flytta hit pjäsen
+            piece.CurrentSquare = square0;
+            piece.Steps = 0;
+
+            //lägg till inre raden
+            player.WinSquares = squares;
+        }
+
+        public void WinRowMove(Piece piece, int diceroll)
+        {
+            //hitta spelaren
+            var player = Players.SingleOrDefault(player => player.Color == piece.Color);
+            //inre raden
+            var squares = player.WinSquares;
+            int currentSquare = piece.CurrentSquare.SquareId;
+            //nya rutan
+            //WinSquare newsquare = squares.SingleOrDefault(square => square.SquareId == diceroll);
+            int newSquareId = currentSquare + diceroll;
+            // 8
+            if (newSquareId == 5)
+            {
+
+                Console.WriteLine("Congratulations you have finnished the game! You are now free from our chains and can leave to live your life!");
+                player.Pieces.Remove(piece);
+            } else
+            {
+                int winroll = 5 - currentSquare;
+                Console.WriteLine($"You need to roll a {winroll}, next players turn");
+            }
+            //hitta rutan med id = newsquareid
+            ISquare square = squares.SingleOrDefault(square => square.SquareId == newSquareId);
+            //ta bort från gamla rutan
+            piece.CurrentSquare.SquarePiece = null;
+            //tilldela nya rutan
+            piece.CurrentSquare = square;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace LudoGame
 {
@@ -21,13 +22,17 @@ namespace LudoGame
 
     public class EventLoop
     {
+
         public void GameLoop()
         {
             Game game = CreateGame();
-            while (true)
+            //ett drag var tills någon spelare inte har pjäser kvar
+            while (!game.Players.Any(player => player.Pieces.Count == 0))
             {
                 RunGameMove(game);
             }
+            IPlayer winner = game.Players.SingleOrDefault(player => player.Pieces.Count == 0);
+            Console.WriteLine($"{winner.Color} is the winner !!!");
         }
 
         public void RunGameMove(Game game)
@@ -42,15 +47,22 @@ namespace LudoGame
 
                 if (piece != null)
                 { 
-                    //spara gamla rutan för att skriva drag
-                    Square oldsquare = piece.CurrentSquare;
-                    //flytta pjäs
-                    game.MoveToSquare(piece, diceroll);
-                    //skriv ut vad som hände
-                    Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
+                    if (piece.CurrentSquare.GetType() == typeof(Square))
+                    {
+                        //spara gamla rutan för att skriva drag
+                        ISquare oldsquare = piece.CurrentSquare;
+                        //flytta pjäs
+                        game.MoveToSquare(piece, diceroll);
+                        //skriv ut vad som hände
+                        Console.WriteLine($"Piece nr {piece.PieceId} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
+                    } else
+                    {
+                        //spara gamla rutan för att skriva drag
+                        ISquare oldsquare = piece.CurrentSquare;
+                        //flytta pjäs
+                        game.WinRowMove(piece, diceroll);
+                    }
                 }
-                
-                
                 Console.ReadLine();
             }
         }
@@ -81,14 +93,9 @@ namespace LudoGame
 
             //skapa bräde med antal spelare, välj färg själv
             else if (colorinput == 'y') game.SetUpBoard(number, true);
-
+            
             //returnera bräde
             return game;
-        }
-
-        public bool CheckForWin()
-        {
-            return true;
         }
     }
 }

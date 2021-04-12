@@ -25,7 +25,7 @@ namespace LudoGame
             //fråga om en färg för varje spelare
             for (int i = 0; i < nrOfPlayers; i++)
             {
-                Console.WriteLine($"\nPlayer {i+1} select a color");
+                Console.WriteLine($"\nPlayer {i + 1} select a color");
                 string input = Console.ReadLine().ToLower();
                 //om färgen matchar tillgänglig färg får man den, tas bort ur lista när man väljer så ingen annan kan ta samma
                 while (!availableColors.Contains(input))
@@ -46,8 +46,9 @@ namespace LudoGame
             //skicka tillbaka spelare
             return players;
         }
+
         //skapa bräde
-        public void SetUpBoard(int nrOfPlayers, bool selectColors) 
+        public void SetUpBoard(int nrOfPlayers, bool selectColors)
         {
             if (Board == null)
             {
@@ -76,12 +77,14 @@ namespace LudoGame
                     MakePieces(player);
                     Players.Add(player);
                 }
-            } else
+            }
+            else
             {
                 //spelare väljer färg
                 Players = ColorSelect(nrOfPlayers, AvailablePlayers);
             }
         }
+
         //skapa pjäser
         public static void MakePieces(IPlayer player)
         {
@@ -94,9 +97,10 @@ namespace LudoGame
                     CurrentSquare = player.StartSquare,
                     PieceNr = (i + 1)
                 };
-            player.Pieces.Add(piece);
+                player.Pieces.Add(piece);
             }
         }
+
         //spelare börjar i sitt bo
         //hitta nästa ruta
         public Square FindNextSquare(Piece piece, int diceroll)
@@ -112,6 +116,7 @@ namespace LudoGame
             //skicka tbx den rutan
             return newSquare;
         }
+
         //flytta till en ruta
         public void MoveToSquare(Piece piece, int diceroll)
         {
@@ -167,9 +172,9 @@ namespace LudoGame
                 {
                     Console.WriteLine("You're not allowed to move a new piece! Next players turn. (press enter)");
                     return null;
-                } else
+                }
+                else
                 {
-                    
                     return newpiece;
                 }
             }
@@ -212,7 +217,8 @@ namespace LudoGame
                     if (piece.CurrentSquare.GetType() == typeof(Square))
                     {
                         Console.WriteLine($"{piece.PieceNr}, current square: {piece.CurrentSquare.SquareId}");
-                    } else
+                    }
+                    else
                     {
                         Console.WriteLine($"{piece.PieceNr}, current square on square: {piece.CurrentSquare.SquareId}");
                     }
@@ -223,18 +229,18 @@ namespace LudoGame
             //ska returnera en pjäs
             return newpiece;
         }
+
         //spelare väljer pjäs
         public static Piece SelectPieceUserInput(List<Piece> pieces)
         {
             //ta emot siffra från spelare
-            int nr = 0;
             List<int> pieceNumbers = new();
             foreach (var piece in pieces)
             {
                 pieceNumbers.Add(piece.PieceNr);
             }
             //kolla om den pjäsen finns, annars fråga igen
-            bool input = Int32.TryParse(Console.ReadLine(), out nr);
+            bool input = Int32.TryParse(Console.ReadLine(), out int nr);
             while (!input && !pieceNumbers.Contains(nr))
             {
                 Console.WriteLine("Input a valid number ( 1 - 4 )");
@@ -242,15 +248,16 @@ namespace LudoGame
             }
             //Skicka tillbaka den valda pjäsen
             var selectedpiece = pieces.SingleOrDefault(piece => piece.PieceNr == nr);
-            return selectedpiece;            
+            return selectedpiece;
         }
+
         //skapa vinststräcka
         public void SetUpWinSquares(Piece piece, int steps)
         {
             //hitta spelaren
             var player = Players.SingleOrDefault(player => player.Color == piece.Color);
             List<InnerSquare> squares = new();
-            // 4 rutor skapas (1 - 5) 
+            // 4 rutor skapas (1 - 5)
             for (int i = 1; i < 5; i++)
             {
                 InnerSquare square = new();
@@ -306,7 +313,8 @@ namespace LudoGame
             {
                 Console.WriteLine("Congratulations you have finnished the game! You are now free from our chains and can leave to live your life!");
                 player.Pieces.Remove(piece);
-            } else
+            }
+            else
             {
                 //hitta rutan med id = newsquareid
                 ISquare square = squares.SingleOrDefault(square => square.SquareId == newSquareId);
@@ -314,6 +322,7 @@ namespace LudoGame
                 piece.CurrentSquare = square;
             }
         }
+
         private void Knuffa(Piece piece)
         {
             //hitta spelare
@@ -324,6 +333,7 @@ namespace LudoGame
             piece.Steps = 0;
             piece.IsAlive = false;
         }
+
         //
     }
 }

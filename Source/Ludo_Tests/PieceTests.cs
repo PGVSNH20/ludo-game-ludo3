@@ -5,7 +5,6 @@ namespace Ludo_Tests
 {
     public class PieceTests
     {
-
         [Fact]
         public void PiecesAreCreated()
         {

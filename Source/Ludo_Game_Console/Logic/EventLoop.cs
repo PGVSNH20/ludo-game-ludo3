@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LudoGame
@@ -15,24 +16,36 @@ namespace LudoGame
     //om man inte rullar 1, 6 och alla pjäser är döda så får man inte välja en pjäs ..
     //automatiskt flytta levande pjäs om endast en lever
     //om en spelare har möjlighet att knuffa ut en annan spelares pjäs vill detta visas.
-    //vinst streckan 
+    //vinst streckan
     //flytta tillbaka pjäs till start om den blir knuffad
     //felhantera user input om t.ex enter
     //kliva över 40 går runt, tillbak på 0
+    //todo: fråga vilken man laddar
 
     public class EventLoop
     {
-
         public static void GameLoop()
         {
             Game game = CreateGame();
             //ett drag var tills någon spelare inte har pjäser kvar
             while (!game.Players.Any(player => player.Pieces.Count == 0))
             {
+                AskForSave(game);
                 RunGameMove(game);
             }
             IPlayer winner = game.Players.SingleOrDefault(player => player.Pieces.Count == 0);
             Console.WriteLine($"{winner.Color} is the winner !!!");
+        }
+
+        private static void AskForSave(Game game)
+        {
+            Console.WriteLine("Do you want to save?");
+            string input = Console.ReadLine();
+            if (input == "yes")
+            {
+                Database.Save(game);
+                Console.WriteLine("Game was saved with id {0}", DateTime.Now.Minute);
+            }
         }
 
         public static void RunGameMove(Game game)
@@ -44,7 +57,6 @@ namespace LudoGame
                 int diceroll = Dice.RollDice(player);
                 //välja pjäs
                 Piece piece = game.SelectPiece(player, diceroll);
-
 
                 if (piece != null)
                 {
@@ -61,7 +73,8 @@ namespace LudoGame
                         bool isNest = oldsquare.GetType() == typeof(Nest);
                         if (isNest) Console.WriteLine($"Piece nr {piece.PieceNr} has moved from nest to square nr {piece.CurrentSquare.SquareId}");
                         else Console.WriteLine($"Piece nr {piece.PieceNr} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
-                    } else  //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
+                    }
+                    else  //om någon pjäs tagit mer än 40 steg, gå in i vinststräckan
 
                     {
                         //gå till inre raden
@@ -77,7 +90,8 @@ namespace LudoGame
                                 Console.WriteLine($"Piece nr {piece.PieceNr} has moved from square nr {oldsquare.SquareId} to square nr {piece.CurrentSquare.SquareId}");
                                 Console.WriteLine($"Piece nr {piece.PieceNr} is {5 - piece.CurrentSquare.SquareId} steps from winning");
                             }
-                        } else
+                        }
+                        else
                         {
                             //skapa inre raden om den inte finns
                             int steps = newsquarenr - 40;
@@ -95,8 +109,7 @@ namespace LudoGame
             //fråga om antal spelare
             Console.WriteLine("Welcome!");
             Console.WriteLine("Do you want to:\n1. Create a new game\n2. Load saved game");
-            int nr = 0;
-            bool boolinput = Int32.TryParse(Console.ReadLine(), out nr);
+            bool boolinput = Int32.TryParse(Console.ReadLine(), out int nr);
             while (!boolinput && nr != 1 && nr != 2)
             {
                 Console.WriteLine("Input 1 or 2");
@@ -105,10 +118,28 @@ namespace LudoGame
             if (nr == 1)
             {
                 return CreateNewGame(game);
-            } else
+            }
+            else
             {
-                return game;
+                //todo: fråga vilken man laddar
+                Console.WriteLine("Which game do you want to load?");
+                LudoContext db = new();
+                List<int> games = new();
 
+                foreach (var savegame in db.SaveGame)
+                {
+                    games.Add(savegame.SaveGameId);
+                    Console.WriteLine(savegame.SaveGameId);
+                }
+
+                bool loadinput = Int32.TryParse(Console.ReadLine(), out int id);
+                while (!loadinput && !games.Contains(id))
+                {
+                    Console.WriteLine("input a valid savegame");
+                    loadinput = Int32.TryParse(Console.ReadLine(), out id);
+                }
+
+                return Database.Load(id);
             }
         }
 
@@ -125,8 +156,7 @@ namespace LudoGame
 
             //fråga om man vill välja färg själv
             Console.WriteLine("Do you want to select your own colors? (y/n)");
-            char colorinput = yesOrNo();
-
+            char colorinput = YesOrNo();
 
             //skapa bräde med antal spelare, automatisk färg
             if (colorinput == 'n') game.SetUpBoard(number, false);
@@ -138,7 +168,7 @@ namespace LudoGame
             return game;
         }
 
-        public static char yesOrNo()
+        public static char YesOrNo()
         {
             char colorinput = Console.ReadKey().KeyChar;
             while (colorinput != 'y' && colorinput != 'n')

@@ -1,6 +1,7 @@
 ﻿using LudoGame;
-using Xunit;
 using System.Linq;
+using Xunit;
+
 namespace Ludo_Tests
 {
     public class GameTests
@@ -32,13 +33,11 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[0];
 
-            Game.MakePieces(player);
-
             Piece piece = game.SelectPiece(player, 1);
 
             game.MoveToSquare(piece, 1);
 
-            Assert.Equal(1, player.Pieces[0].CurrentSquare.SquareId);
+            Assert.Equal(typeof(Square), piece.CurrentSquare.GetType());
         }
 
         [Fact]
@@ -48,8 +47,6 @@ namespace Ludo_Tests
             game.SetUpBoard(2, false);
 
             IPlayer player = game.Players[0];
-
-            Game.MakePieces(player);
 
             Piece piece = game.SelectPiece(player, 2);
 
@@ -64,8 +61,6 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[0];
 
-            Game.MakePieces(player);
-
             Piece testpiece = player.Pieces[0];
             game.SetUpWinSquares(testpiece, 3);
 
@@ -75,8 +70,6 @@ namespace Ludo_Tests
             Assert.Equal(expected, actual);
         }
 
-
-
         [Fact]
         public void CanSelectPiece()
         {
@@ -84,7 +77,6 @@ namespace Ludo_Tests
             game.SetUpBoard(1, false);
             IPlayer player = game.Players[0];
 
-            Game.MakePieces(player);
             var piece = game.SelectPiece(player, 1);
 
             Assert.Equal(typeof(Piece), piece.GetType());
@@ -145,7 +137,7 @@ namespace Ludo_Tests
             //spelare 2 till ruta 12
             game.MoveToSquare(testpiecetwo, 2);
 
-            Assert.Equal(0, testpieceone.CurrentSquare.SquareId);
+            Assert.Equal(typeof(Nest), testpieceone.CurrentSquare.GetType());
         }
     }
 }

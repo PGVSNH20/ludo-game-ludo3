@@ -1,4 +1,5 @@
 using LudoGame;
+using System.Linq;
 using Xunit;
 
 namespace Ludo_Tests
@@ -15,14 +16,11 @@ namespace Ludo_Tests
     //arrange
     //act
     //assert
-
-    // använder fluent assertations: https://fluentassertions.com/introduction
     public class BoardTests
     {
-
         [Fact]
         public void SquaresAreCreated()
-           
+
         {
             var Board = new Board();
             Assert.Equal(40, Board.Squares.Count);
@@ -33,13 +31,13 @@ namespace Ludo_Tests
         {
             Game Game = new();
             Game.SetUpBoard(3, false);
-            int playersStartSquare = Game.Players[0].Pieces[0].CurrentSquare.SquareId;
-            int playersStartSquare2 = Game.Players[1].Pieces[0].CurrentSquare.SquareId;
-            int playersStartSquare3 = Game.Players[2].Pieces[0].CurrentSquare.SquareId;
+            var playersStartSquare = Game.Players[0].Pieces[0].CurrentSquare;
+            var playersStartSquare2 = Game.Players[1].Pieces[0].CurrentSquare;
+            var playersStartSquare3 = Game.Players[2].Pieces[0].CurrentSquare;
 
-            Assert.Equal(0, playersStartSquare);
-            Assert.Equal(10, playersStartSquare2);
-            Assert.Equal(20, playersStartSquare3);
+            Assert.Equal(typeof(Nest), playersStartSquare.GetType());
+            Assert.Equal(typeof(Nest), playersStartSquare2.GetType());
+            Assert.Equal(typeof(Nest), playersStartSquare3.GetType());
         }
 
         //[Fact]
@@ -50,5 +48,53 @@ namespace Ludo_Tests
 
         //    Assert.NotNull(playerWinSquare);
         //}
+
+        [Fact]
+        public void CanSaveAndLoadFromDb()
+        {
+            LudoContext db = new();
+
+            Game game = new();
+            game.SetUpBoard(2, false);
+
+            var testPieceOne = game.Players[0].Pieces[0];
+            var testPieceTwo = game.Players[1].Pieces[0];
+
+            //första spelaren slår 6
+            game.MoveToSquare(testPieceOne, 6);
+            //andra spelaren slår 1
+            game.MoveToSquare(testPieceTwo, 1);
+            //första spelaren slår 4
+            game.MoveToSquare(testPieceOne, 4);
+            //andra spelaren slår 3
+            game.MoveToSquare(testPieceTwo, 3);
+
+            db.Database.EnsureCreated();
+            SaveGame save = new();
+
+            foreach (var player in game.Players)
+            {
+                Player newPlayer = new();
+                newPlayer.Pieces = player.Pieces;
+                newPlayer.Color = player.Color;
+                newPlayer.StartSquareNr = (player.StartSquare.SquareId + 1);
+                save.Players.Add(newPlayer);
+                db.Players.Add(newPlayer);
+                foreach (Piece piece in newPlayer.Pieces)
+                {
+                    db.Pieces.Add(piece);
+                }
+            }
+            db.SaveGame.Add(save);
+            db.SaveChanges();
+
+            var loadplayer = db.Players.Find(1);
+            loadplayer.Pieces = db.Pieces.Where(piece => piece.Color == loadplayer.Color).ToList();
+            int expected = 9;
+            var actual = loadplayer.Pieces[0].CurrentSquareNr;
+
+            Assert.Equal(expected, actual);
+            db.SaveChanges();
+        }
     }
 }

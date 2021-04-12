@@ -1,9 +1,4 @@
-﻿using LudoGame;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Ludo_Game_Console
+﻿namespace LudoGame
 {
     internal class Program
     {

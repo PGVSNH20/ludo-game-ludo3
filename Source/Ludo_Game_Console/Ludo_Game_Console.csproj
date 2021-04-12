@@ -18,8 +18,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\LudoGame\Ludo_Game.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Ludo_Tests
 {
-    public class WinSquareTests
+    public class InnerSquareTests
     {
         [Fact]
         public void OnSquare3roll5()
@@ -13,7 +13,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[1];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
             Piece testpiece1 = player.Pieces[1];
 
             //står på ruta 3
@@ -32,7 +32,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[1];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
             Piece testpiece1 = player.Pieces[1];
 
             //står på ruta 2
@@ -51,7 +51,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[1];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
             Piece testpiece1 = player.Pieces[1];
 
             //står på ruta 1
@@ -70,7 +70,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[1];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
             Piece testpiece1 = player.Pieces[1];
 
             //står på ruta 4

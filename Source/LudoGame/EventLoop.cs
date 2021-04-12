@@ -21,7 +21,7 @@ namespace LudoGame
     public class EventLoop
     {
 
-        public void GameLoop()
+        public static void GameLoop()
         {
             Game game = CreateGame();
             //ett drag var tills någon spelare inte har pjäser kvar
@@ -33,7 +33,7 @@ namespace LudoGame
             Console.WriteLine($"{winner.Color} is the winner !!!");
         }
 
-        public void RunGameMove(Game game)
+        public static void RunGameMove(Game game)
         {
             foreach (IPlayer player in game.Players)
             {
@@ -82,7 +82,7 @@ namespace LudoGame
             }
         }
 
-        public Game CreateGame()
+        public static Game CreateGame()
         {
             Game game = new();
             //fråga om antal spelare

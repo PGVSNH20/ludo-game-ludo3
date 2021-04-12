@@ -77,7 +77,7 @@ namespace LudoGame
             }
         }
         //skapa pjäser
-        public void MakePieces(IPlayer player)
+        public static void MakePieces(IPlayer player)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -113,9 +113,18 @@ namespace LudoGame
             piece.CurrentSquare.SquarePiece = null;
             //gör pjäsen levande om den inte är det
             if (piece.IsAlive == false) piece.IsAlive = true;
-            //flytta pjäsen till nya rutan
+            //todo: flytta tillbaka pjäs till start om den blir knuffad
+            //flytta pjäsen till nya rutan, knuffa om det står nån där
+            bool enemyOnSquare = newSquare.SquarePiece != null && newSquare.SquarePiece.Color != piece.Color;
+            Piece enemyPiece = newSquare.SquarePiece;
+            if (enemyOnSquare)
+            {
+                Knuffa(enemyPiece);
+                Console.WriteLine($"{enemyPiece.Color} has lost a piece, {piece.Color} has taken the square");
+            }
             newSquare.MoveHere(piece);
         }
+
         //pjäs logik
         public Piece SelectPiece(IPlayer player, int diceroll)
         {
@@ -201,7 +210,7 @@ namespace LudoGame
             return newpiece;
         }
         //spelare väljer pjäs
-        public Piece SelectPieceUserInput(List<Piece> pieces)
+        public static Piece SelectPieceUserInput(List<Piece> pieces)
         {
             //todo: felhantera user input om t.ex enter
             //ta emot siffra från spelare
@@ -286,6 +295,16 @@ namespace LudoGame
             piece.CurrentSquare.SquarePiece = null;
             //tilldela nya rutan
             piece.CurrentSquare = square;
+        }
+        private void Knuffa(Piece piece)
+        {
+            //hitta spelare
+            IPlayer player = Players.SingleOrDefault(player => player.Color == piece.Color);
+            Square square = player.StartSquare;
+            //börja om från nest
+            piece.CurrentSquare = square;
+            piece.Steps = 0;
+            piece.IsAlive = false;
         }
     }
 }

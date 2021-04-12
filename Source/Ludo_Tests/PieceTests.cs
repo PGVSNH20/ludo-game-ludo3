@@ -9,7 +9,6 @@ namespace Ludo_Tests
         [Fact]
         public void PiecesAreCreated()
         {
-            var Game = new Game();
             RedPlayer redplayer = new();
             Game.MakePieces(redplayer);
             Assert.Equal(typeof(Piece), redplayer.Pieces[0].GetType());
@@ -18,7 +17,6 @@ namespace Ludo_Tests
         [Fact]
         public void RightNumberOfPieces()
         {
-            var Game = new Game();
             RedPlayer redplayer = new();
             Game.MakePieces(redplayer);
             var pieces = redplayer.Pieces;
@@ -29,7 +27,6 @@ namespace Ludo_Tests
         [Fact]
         public void PiecesHaveCorrectColor()
         {
-            var Game = new Game();
             RedPlayer redplayer = new();
             Game.MakePieces(redplayer);
             var pieces = redplayer.Pieces;

@@ -32,7 +32,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[0];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
 
             Piece piece = game.SelectPiece(player, 1);
 
@@ -49,7 +49,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[0];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
 
             Piece piece = game.SelectPiece(player, 2);
 
@@ -64,7 +64,7 @@ namespace Ludo_Tests
 
             IPlayer player = game.Players[0];
 
-            game.MakePieces(player);
+            Game.MakePieces(player);
 
             Piece testpiece = player.Pieces[0];
             game.SetUpWinSquares(testpiece, 3);
@@ -77,16 +77,75 @@ namespace Ludo_Tests
 
 
 
-        //[Fact]
-        //public void CanSelectPiece()
-        //{
-        //    Game game = new();
-        //    IPlayer redplayer = new RedPlayer();
+        [Fact]
+        public void CanSelectPiece()
+        {
+            Game game = new();
+            game.SetUpBoard(1, false);
+            IPlayer player = game.Players[0];
 
-        //    game.MakePieces(redplayer);
-        //    var piece = game.SelectPiece(redplayer);
+            Game.MakePieces(player);
+            var piece = game.SelectPiece(player, 1);
 
-        //    Assert.Equal(typeof(Piece), piece.GetType());
-        //}
+            Assert.Equal(typeof(Piece), piece.GetType());
+        }
+
+        [Fact]
+        public void CanKnuff()
+        {
+            Game game = new();
+            game.SetUpBoard(2, false);
+
+            IPlayer playerone = game.Players[0];
+            IPlayer playertwo = game.Players[1];
+
+            Piece testpieceone = playerone.Pieces[0];
+            Piece testpiecetwo = playertwo.Pieces[1];
+
+            //spelare 1 till ruta 12
+            game.MoveToSquare(testpieceone, 6);
+            game.MoveToSquare(testpieceone, 6);
+            //spelare 2 till ruta 12
+            game.MoveToSquare(testpiecetwo, 2);
+
+            Assert.False(testpieceone.IsAlive);
+        }
+
+        [Fact]
+        public void CantKnuffOwnPiece()
+        {
+            Game game = new();
+            game.SetUpBoard(2, false);
+
+            IPlayer playerone = game.Players[0];
+
+            Piece testpieceone = playerone.Pieces[0];
+            Piece testpiecetwo = playerone.Pieces[1];
+
+            game.MoveToSquare(testpieceone, 6);
+            game.MoveToSquare(testpiecetwo, 6);
+
+            Assert.True(testpieceone.IsAlive);
+        }
+
+        [Fact]
+        public void MovesBackToNestWhenKnuffd()
+        {
+            Game game = new();
+            game.SetUpBoard(2, false);
+
+            IPlayer playerone = game.Players[0];
+            IPlayer playertwo = game.Players[1];
+
+            Piece testpieceone = playerone.Pieces[0];
+            Piece testpiecetwo = playertwo.Pieces[1];
+            //spelare 1 till ruta 12
+            game.MoveToSquare(testpieceone, 6);
+            game.MoveToSquare(testpieceone, 6);
+            //spelare 2 till ruta 12
+            game.MoveToSquare(testpiecetwo, 2);
+
+            Assert.Equal(0, testpieceone.CurrentSquare.SquareId);
+        }
     }
 }

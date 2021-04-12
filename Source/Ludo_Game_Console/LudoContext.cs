@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ludo_Game
+namespace Ludo_Game_Console
 {
     //todo: databas
     

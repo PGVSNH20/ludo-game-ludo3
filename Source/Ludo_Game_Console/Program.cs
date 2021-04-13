@@ -18,7 +18,11 @@ namespace LudoGame
                 {
                     games.Add(save.SaveGameName);
                 }
-                while (games.Contains(savegame.GameId)) savegame = EventLoop.AskForSave(savegame);
+                while (games.Contains(savegame.GameId)) 
+                {
+                    Console.WriteLine("Name already exists");
+                    savegame = EventLoop.AskForSave(savegame); 
+                }
                 Database.Save(savegame);
             }
             Console.WriteLine("Do you want to continue (y/n)?");

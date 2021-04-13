@@ -6,6 +6,7 @@ namespace LudoGame
     {
         public int PieceId { get; set; }
         public bool IsAlive { get; set; } = false;
+        
 
         [NotMapped]
         public ISquare CurrentSquare { get; set; }

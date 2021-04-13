@@ -11,7 +11,14 @@ namespace LudoGame
             var game = StartGame();
             var savegame = EventLoop.GameLoop(game);
             if (savegame != null) 
-            { 
+            {
+                List<string> games = new();
+                LudoContext db = new();
+                foreach (var save in db.SaveGame)
+                {
+                    games.Add(save.SaveGameName);
+                }
+                while (games.Contains(savegame.GameId)) savegame = EventLoop.AskForSave(savegame);
                 Database.Save(savegame);
             }
             Console.WriteLine("Do you want to continue (y/n)?");

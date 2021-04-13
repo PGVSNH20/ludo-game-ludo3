@@ -23,6 +23,8 @@ namespace LudoGame
                 db.Players.Add(newPlayer);
                 foreach (Piece piece in newPlayer.Pieces)
                 {
+                    Random rand = new();
+                    piece.PieceId = rand.Next(1, 1000000);
                     db.Pieces.Add(piece);
                 }
             }

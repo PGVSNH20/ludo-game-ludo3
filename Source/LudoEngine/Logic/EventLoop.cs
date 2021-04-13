@@ -34,7 +34,13 @@ namespace LudoGame
             while (!game.Players.Any(player => player.Pieces.Count == 0))
             {
                 //todo: frågar varje runda ?
-                Game savegame = AskForSave(game);
+                Game savegame = null;
+                Console.WriteLine("Press spacebar to save game");
+                ConsoleKey keyinput = Console.ReadKey().Key;
+                if (keyinput == ConsoleKey.Spacebar)
+                {
+                    savegame = AskForSave(game);
+                }
                 if (savegame != null) return game;
                 RunGameMove(game);
             }
@@ -43,22 +49,13 @@ namespace LudoGame
             return null;
         }
 
-        private static Game AskForSave(Game game)
+        public static Game AskForSave(Game game)
         {
-            Console.WriteLine("Press spacebar to save game");
-            ConsoleKey keyinput = Console.ReadKey().Key;
-            if (keyinput == ConsoleKey.Spacebar)
-            {
-                Console.WriteLine("\nName your saved game:");
-                string nameinput = Console.ReadLine();
-                game.GameId = nameinput;
-                Console.WriteLine($"Game is saved as :{nameinput}");
-                return game;
-            }
-            else
-            {
-                return null;
-            }
+            Console.WriteLine("\nName your saved game:");
+            string nameinput = Console.ReadLine();
+            game.GameId = nameinput;
+            Console.WriteLine($"Game is saved as :{nameinput}");
+            return game;
         }
 
         public static void RunGameMove(Game game)

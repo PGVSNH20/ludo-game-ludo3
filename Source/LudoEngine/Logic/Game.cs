@@ -9,7 +9,7 @@ namespace LudoGame
         public List<IPlayer> Players { get; set; } = new();
         public Board Board { get; set; }
         public InnerSquare Winsquare { get; set; } = new();
-
+        public int GameId { get; set; }
         //välj färg själv
         public List<IPlayer> ColorSelect(int nrOfPlayers, List<IPlayer> availablePlayers)
         {

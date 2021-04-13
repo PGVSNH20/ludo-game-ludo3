@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace LudoGame
 {
-    //todo: databas
+    //databas
     //package manager console
     //Add-Migration "Initial ludo"
     //Update-database
@@ -13,11 +15,12 @@ namespace LudoGame
         public DbSet<Player> Players { get; set; }
         public DbSet<Piece> Pieces { get; set; }
 
-        //C:\Users\Default\Documents
-        //todo: fixa path
+        //fixa path
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=X:\savegame.db");
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var filename = Path.Combine(path, "savegame.db");
+            optionsBuilder.UseSqlite(@$"Data Source={filename}");
         }
     }
 

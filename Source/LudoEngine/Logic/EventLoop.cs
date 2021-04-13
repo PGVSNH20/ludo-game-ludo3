@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace LudoGame
@@ -20,32 +19,41 @@ namespace LudoGame
     //flytta tillbaka pjäs till start om den blir knuffad
     //felhantera user input om t.ex enter
     //kliva över 40 går runt, tillbak på 0
-    //todo: fråga vilken man laddar
+    //fråga vilken man laddar
+
+    //3 project
+    //todo: Spara och hämta historik för alla tidigare spel
 
     public class EventLoop
     {
-        public static void GameLoop()
+        public static Game GameLoop(Game game)
         {
-            Game game = CreateGame();
             //ett drag var tills någon spelare inte har pjäser kvar
             while (!game.Players.Any(player => player.Pieces.Count == 0))
             {
-                AskForSave(game);
+                //todo: frågar varje runda ?
+                Game savegame = AskForSave(game);
+                if (savegame != null) return game;
                 RunGameMove(game);
             }
             IPlayer winner = game.Players.SingleOrDefault(player => player.Pieces.Count == 0);
             Console.WriteLine($"{winner.Color} is the winner !!!");
+            return null;
         }
 
-        private static void AskForSave(Game game)
+        private static Game AskForSave(Game game)
         {
             Console.WriteLine("Do you want to save?");
             string input = Console.ReadLine();
+            //todo: fixa input
             if (input == "yes")
             {
-                Database.Save(game);
-                Console.WriteLine("Game was saved with id {0}", DateTime.Now.Minute);
+                //todo: SaveGameID har bara 60 unika alternativ
+                game.GameId = DateTime.Now.Minute;
+                Console.WriteLine("Game was saved with id {0}", game.GameId);
+                return game;
             }
+            return null;
         }
 
         public static void RunGameMove(Game game)
@@ -100,46 +108,6 @@ namespace LudoGame
                     }
                 }
                 Console.ReadLine();
-            }
-        }
-
-        public static Game CreateGame()
-        {
-            Game game = new();
-            //fråga om antal spelare
-            Console.WriteLine("Welcome!");
-            Console.WriteLine("Do you want to:\n1. Create a new game\n2. Load saved game");
-            bool boolinput = Int32.TryParse(Console.ReadLine(), out int nr);
-            while (!boolinput && nr != 1 && nr != 2)
-            {
-                Console.WriteLine("Input 1 or 2");
-                boolinput = Int32.TryParse(Console.ReadLine(), out nr);
-            }
-            if (nr == 1)
-            {
-                return CreateNewGame(game);
-            }
-            else
-            {
-                //todo: fråga vilken man laddar
-                Console.WriteLine("Which game do you want to load?");
-                LudoContext db = new();
-                List<int> games = new();
-
-                foreach (var savegame in db.SaveGame)
-                {
-                    games.Add(savegame.SaveGameId);
-                    Console.WriteLine(savegame.SaveGameId);
-                }
-
-                bool loadinput = Int32.TryParse(Console.ReadLine(), out int id);
-                while (!loadinput && !games.Contains(id))
-                {
-                    Console.WriteLine("input a valid savegame");
-                    loadinput = Int32.TryParse(Console.ReadLine(), out id);
-                }
-
-                return Database.Load(id);
             }
         }
 

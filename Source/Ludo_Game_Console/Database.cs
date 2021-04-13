@@ -6,17 +6,13 @@ namespace LudoGame
 {
     public class Database
     {
-        public void GameMenu()
-        {
-            Console.WriteLine("");
-        }
 
         public static void Save(Game game)
         {
             LudoContext db = new();
             db.Database.EnsureCreated();
             SaveGame save = new();
-
+            save.SaveGameId = game.GameId;
             foreach (var player in game.Players)
             {
                 Player newPlayer = new();

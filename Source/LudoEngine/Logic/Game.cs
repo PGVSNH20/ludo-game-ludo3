@@ -11,7 +11,7 @@ namespace LudoGame
         public InnerSquare Winsquare { get; set; } = new();
         public string GameId { get; set; }
         //välj färg själv
-        public List<IPlayer> ColorSelect(int nrOfPlayers, List<IPlayer> availablePlayers)
+        public static List<IPlayer> ColorSelect(int nrOfPlayers, List<IPlayer> availablePlayers)
         {
             //skriv ut tillgängliga färger och spara det
             Console.WriteLine("\nAvailable colors: \n");

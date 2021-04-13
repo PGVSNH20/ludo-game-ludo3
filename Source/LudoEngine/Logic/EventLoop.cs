@@ -35,6 +35,7 @@ namespace LudoGame
             {
                 //todo: frågar varje runda ?
                 Game savegame = null;
+                RunGameMove(game);
                 Console.WriteLine("Press spacebar to save game");
                 ConsoleKey keyinput = Console.ReadKey().Key;
                 if (keyinput == ConsoleKey.Spacebar)
@@ -42,7 +43,6 @@ namespace LudoGame
                     savegame = AskForSave(game);
                 }
                 if (savegame != null) return game;
-                RunGameMove(game);
             }
             IPlayer winner = game.Players.SingleOrDefault(player => player.Pieces.Count == 0);
             Console.WriteLine($"{winner.Color} is the winner!!! You defeated the evil Sith and saved the Galaxy!!!");

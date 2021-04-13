@@ -9,12 +9,12 @@ namespace LudoGame
         public List<IPlayer> Players { get; set; } = new();
         public Board Board { get; set; }
         public InnerSquare Winsquare { get; set; } = new();
-        public int GameId { get; set; }
+        public string GameId { get; set; }
         //välj färg själv
         public List<IPlayer> ColorSelect(int nrOfPlayers, List<IPlayer> availablePlayers)
         {
             //skriv ut tillgängliga färger och spara det
-            Console.WriteLine("Available colors: \n");
+            Console.WriteLine("\nAvailable colors: \n");
             List<string> availableColors = new();
             List<IPlayer> players = new();
             foreach (var player in availablePlayers)
@@ -30,6 +30,7 @@ namespace LudoGame
                 //om färgen matchar tillgänglig färg får man den, tas bort ur lista när man väljer så ingen annan kan ta samma
                 while (!availableColors.Contains(input))
                 {
+                    Console.WriteLine("Input a valid color");
                     input = Console.ReadLine().ToLower();
                 }
                 //hämta klassen som matchar färg
@@ -38,10 +39,10 @@ namespace LudoGame
                 int newsquareid = (i + (i * 9));
                 Nest nest = new();
                 player.StartSquare = nest.CreateNest(newsquareid);
-                //player.StartSquare = Board.Squares.Single(square => square.SquareId == (i + (i * 9)));
                 //skapa pjäser och spara spelare
                 MakePieces(player);
                 players.Add(player);
+                availableColors.Remove(input);
             }
             //skicka tillbaka spelare
             return players;
@@ -284,7 +285,7 @@ namespace LudoGame
             //lägg till inre raden
             player.WinSquares = squares;
         }
-
+        //flytta pjäs på inre raden
         public void WinRowMove(Piece piece, int diceroll)
         {
             //hitta spelaren
@@ -293,9 +294,7 @@ namespace LudoGame
             var squares = player.WinSquares;
             int currentSquare = piece.CurrentSquare.SquareId;
             //nya rutan
-            //WinSquare newsquare = squares.SingleOrDefault(square => square.SquareId == diceroll);
             int newSquareId = currentSquare + diceroll;
-            // 8
             int walkback = 0;
             //om du kliver över vinstrutan
             if (newSquareId > 5)
@@ -311,7 +310,7 @@ namespace LudoGame
 
             if (newSquareId == 5)
             {
-                Console.WriteLine("Congratulations you have finnished the game! You are now free from our chains and can leave to live your life!");
+                Console.WriteLine("Congratiulations this pices is now free form the evil Sith Lord: Darth Ludo!\nNow make sure to free the rest of the Jedi to win the game and defeat the Sith!");
                 player.Pieces.Remove(piece);
             }
             else
@@ -333,7 +332,5 @@ namespace LudoGame
             piece.Steps = 0;
             piece.IsAlive = false;
         }
-
-        //
     }
 }

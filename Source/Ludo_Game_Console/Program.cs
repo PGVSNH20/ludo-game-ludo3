@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LudoGame
 {
@@ -9,7 +10,14 @@ namespace LudoGame
         {
             var game = StartGame();
             var savegame = EventLoop.GameLoop(game);
-            if (savegame != null) Database.Save(savegame);
+            if (savegame != null) 
+            { 
+                Database.Save(savegame);
+            }
+            Console.WriteLine("Do you want to continue (y/n)?");
+            char input = EventLoop.YesOrNo();
+            if ( input == 'y') EventLoop.GameLoop(game);
+
         }
 
         public static Game StartGame()
@@ -33,22 +41,24 @@ namespace LudoGame
                 //fråga vilken man laddar
                 Console.WriteLine("Which game do you want to load?");
                 LudoContext db = new();
-                List<int> games = new();
+                List<string> games = new();
 
                 foreach (var savegame in db.SaveGame)
                 {
-                    games.Add(savegame.SaveGameId);
-                    Console.WriteLine(savegame.SaveGameId);
+                    games.Add(savegame.SaveGameName);
+                    Console.WriteLine(savegame.SaveGameName);
                 }
 
-                bool loadinput = Int32.TryParse(Console.ReadLine(), out int id);
-                while (!loadinput && !games.Contains(id))
+                string name = Console.ReadLine();
+                while (!games.Contains(name))
                 {
                     Console.WriteLine("input a valid savegame");
-                    loadinput = Int32.TryParse(Console.ReadLine(), out id);
+                    name = Console.ReadLine();
                 }
 
-                return Database.Load(id);
+                var gameid = db.SaveGame.SingleOrDefault(save => save.SaveGameName == name);
+                if (gameid != null) return Database.Load(gameid.SaveGameId);
+                else return null;
             }
         }
     }

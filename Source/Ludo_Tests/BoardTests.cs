@@ -1,4 +1,5 @@
 using LudoGame;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -40,15 +41,6 @@ namespace Ludo_Tests
             Assert.Equal(typeof(Nest), playersStartSquare3.GetType());
         }
 
-        //[Fact]
-        //public void WinSquaresAreCreated()
-        //{
-        //    Game game = new();
-        //    game.SetUpBoard(2, false);
-
-        //    Assert.NotNull(playerWinSquare);
-        //}
-
         [Fact]
         public void CanSaveAndLoadFromDb()
         {
@@ -71,7 +63,7 @@ namespace Ludo_Tests
 
             db.Database.EnsureCreated();
             SaveGame save = new();
-
+            save.SaveGameId = 100;
             foreach (var player in game.Players)
             {
                 Player newPlayer = new();
@@ -87,13 +79,33 @@ namespace Ludo_Tests
             }
             db.SaveGame.Add(save);
             db.SaveChanges();
+            List<Player> playerlist = new();
+            var loadplayer = db.Players.Where(player => player.SaveGameId == save.SaveGameId);
+            foreach (var load in loadplayer)
+            {
+                var pieces = db.Pieces.Where(piece => piece.Color == load.Color).ToList();
+                foreach (var piece in pieces)
+                {
+                    load.Pieces.Add(piece);
+                }
+                playerlist.Add(load);
+            }
 
-            var loadplayer = db.Players.Find(1);
-            loadplayer.Pieces = db.Pieces.Where(piece => piece.Color == loadplayer.Color).ToList();
             int expected = 9;
-            var actual = loadplayer.Pieces[0].CurrentSquareNr;
+            var actual = playerlist[0].Pieces[0].CurrentSquareNr;
 
             Assert.Equal(expected, actual);
+            var players = db.Players.Where(player => player.SaveGameId == save.SaveGameId);
+            foreach (var player in players)
+            {
+                var pieces = db.Pieces.Where(piece => piece.PlayerId == player.PlayerId);
+                foreach (var piece in pieces)
+                {
+                    db.Pieces.Remove(piece);
+                }
+                db.Players.Remove(player);
+            }
+            db.SaveGame.Remove(save);
             db.SaveChanges();
         }
     }

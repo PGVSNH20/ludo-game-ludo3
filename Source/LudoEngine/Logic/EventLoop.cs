@@ -20,9 +20,11 @@ namespace LudoGame
     //felhantera user input om t.ex enter
     //kliva över 40 går runt, tillbak på 0
     //fråga vilken man laddar
-
     //3 project
+    //fixa input
+    //SaveGameID har bara 60 unika alternativ
     //todo: Spara och hämta historik för alla tidigare spel
+    //flytta in ALL logik i game
 
     public class EventLoop
     {
@@ -37,23 +39,26 @@ namespace LudoGame
                 RunGameMove(game);
             }
             IPlayer winner = game.Players.SingleOrDefault(player => player.Pieces.Count == 0);
-            Console.WriteLine($"{winner.Color} is the winner !!!");
+            Console.WriteLine($"{winner.Color} is the winner!!! You defeated the evil Sith and saved the Galaxy!!!");
             return null;
         }
 
         private static Game AskForSave(Game game)
         {
-            Console.WriteLine("Do you want to save?");
-            string input = Console.ReadLine();
-            //todo: fixa input
-            if (input == "yes")
+            Console.WriteLine("Press spacebar to save game");
+            ConsoleKey keyinput = Console.ReadKey().Key;
+            if (keyinput == ConsoleKey.Spacebar)
             {
-                //todo: SaveGameID har bara 60 unika alternativ
-                game.GameId = DateTime.Now.Minute;
-                Console.WriteLine("Game was saved with id {0}", game.GameId);
+                Console.WriteLine("\nName your saved game:");
+                string nameinput = Console.ReadLine();
+                game.GameId = nameinput;
+                Console.WriteLine($"Game is saved as :{nameinput}");
                 return game;
             }
-            return null;
+            else
+            {
+                return null;
+            }
         }
 
         public static void RunGameMove(Game game)
@@ -131,19 +136,20 @@ namespace LudoGame
 
             //skapa bräde med antal spelare, välj färg själv
             else if (colorinput == 'y') game.SetUpBoard(number, true);
-
+            //spelid för att spara sen
+            //game.GameId = DateTime.Now.Minute;
             //returnera bräde
             return game;
         }
 
         public static char YesOrNo()
         {
-            char colorinput = Console.ReadKey().KeyChar;
-            while (colorinput != 'y' && colorinput != 'n')
+            char charinput = Console.ReadKey().KeyChar;
+            while (charinput != 'y' && charinput != 'n')
             {
-                colorinput = Console.ReadKey().KeyChar;
+                charinput = Console.ReadKey().KeyChar;
             }
-            return colorinput;
+            return charinput;
         }
     }
 }

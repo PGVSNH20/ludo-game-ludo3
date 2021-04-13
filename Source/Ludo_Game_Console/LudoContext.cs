@@ -36,6 +36,7 @@ namespace LudoGame
     public class SaveGame
     {
         public int SaveGameId { get; set; }
+        public string SaveGameName { get; set; }
         public List<Player> Players { get; set; } = new();
     }
 }

@@ -12,7 +12,7 @@ namespace LudoGame
             LudoContext db = new();
             db.Database.EnsureCreated();
             SaveGame save = new();
-            save.SaveGameId = game.GameId;
+            save.SaveGameName = game.GameId;
             foreach (var player in game.Players)
             {
                 Player newPlayer = new();

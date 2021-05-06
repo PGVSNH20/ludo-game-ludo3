@@ -6,7 +6,7 @@ Det ska gå att spela spelet via en konsol applikation, två till fyra spelare v
 
 Koden ska vara uppdelat i en konsol applikation och en class library som innehåller all logik, låt oss kalla det vår spelmotor / game engine.
 
-Spelet ska spara i en databas (med code first och Entity Framework), så att det går att ta fram historik på alla tidigare spel. Om applikationen skulle stängas ner, ska det gå att komma tillbaka in i spelet.
+Spelet ska spara i en databas (med code first och Entity Framework), så att det går att ta fram historik på alla tidigare spel. Om applikationen skulle stängas ner, ska det gå att komma tillbaka in i spelet.!
 
 # Programmering
 
